@@ -1,5 +1,70 @@
 #include "agency.h"
 
+agent& agent::operator=(const agent& a)
+{
+	this->time = a.time;
+	this->left = a.left;
+	strcpy(this->name, a.name);
+	this->total = a.total;
+	return *this;
+}
+
+bool agent::operator>(const agent& a)
+{
+	if (this->time.tm_year > a.time.tm_year)
+	{
+		return true;
+	}
+	else if (this->time.tm_year == a.time.tm_year)
+	{
+		if (this->time.tm_mon > a.time.tm_mon)
+		{
+			return true;
+		}
+		else if (this->time.tm_mon == a.time.tm_mon)
+		{
+			if (this->time.tm_mday > a.time.tm_mday)
+			{
+				return true;
+			}
+			else if (this->time.tm_mday == a.time.tm_mday)
+			{
+				if (this->time.tm_hour > a.time.tm_hour)
+				{
+					return true;
+				}
+				else if (this->time.tm_hour == a.time.tm_hour)
+				{
+					if (this->time.tm_min > a.time.tm_min)
+					{
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		return false;
+	}
+}
+
 agency::agency(unsigned int size)
 {
 	count = 0;
@@ -36,6 +101,25 @@ int agency::num()
 {
 	return this->count;
 }
+
+void agency::sortdate()
+{
+	int i = 0, j = 0;
+
+	for (i = count - 1; i >= 1; i--)
+	{
+		for (j = 0; j < i; j++)
+		{
+			if (ag[j] > ag[j + 1])
+			{
+				agent ag1 = ag[j];
+				ag[j] = ag[j + 1];
+				ag[j + 1] = ag1;
+			}
+		}
+	}
+}
+
 
 
 std::ostream& operator<< (std::ostream& out, const agency& a)

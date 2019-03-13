@@ -12,10 +12,14 @@ struct agent
 	unsigned int left;
 	unsigned int total;
 	tm time;
+
+	agent& operator=(const agent& a);
+	bool operator>(const agent& a);
 };
 
 class agency
 {
+public:
 	agent *ag;
 	int count = 0;
 
@@ -26,6 +30,7 @@ public:
 	void append(const char*, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
 	agent operator[](int);
 	int num();
+	void sortdate();
 	friend std::ostream& operator<< (std::ostream& out, const agency& a);
 	friend std::ostream& operator<< (std::ostream& out, const agent& a);
 };
