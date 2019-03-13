@@ -31,6 +31,7 @@ public:
 	agent operator[](int);
 	int num();
 	void sortdate();
+	void sortname();
 	friend std::ostream& operator<< (std::ostream& out, const agency& a);
 	friend std::ostream& operator<< (std::ostream& out, const agent& a);
 };

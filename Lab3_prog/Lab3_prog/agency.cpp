@@ -120,6 +120,35 @@ void agency::sortdate()
 	}
 }
 
+void agency::sortname()
+{
+	int i = 0, j = 0, k = 0;
+
+	for (i = count - 1; i >= 1; i--)
+	{
+		for (j = 0; j < i; j++)
+		{
+			while (ag[j].name[k] != '\0' || ag[j + 1].name[k] != '\0')
+			{
+				if (ag[j].name[k] > ag[j + 1].name[k])
+				{
+					agent ag1 = ag[j];
+					ag[j] = ag[j + 1];
+					ag[j + 1] = ag1;
+					break;
+				}
+				else if (ag[j].name[k] == ag[j + 1].name[k])
+				{
+					k++;
+				}
+				else
+				{
+					break;
+				}
+			}
+		}
+	}
+}
 
 
 std::ostream& operator<< (std::ostream& out, const agency& a)
