@@ -8,6 +8,7 @@ int main()
 	std::cin >> k;
 
 	std::cout << k[0];
+	std::cout << k.num() << std::endl;
 
 	system("pause");
 	return 0;

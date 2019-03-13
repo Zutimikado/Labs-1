@@ -32,6 +32,11 @@ agent agency::operator[](int i)
 	return this->ag[i];
 }
 
+int agency::num()
+{
+	return this->count;
+}
+
 
 std::ostream& operator<< (std::ostream& out, const agency& a)
 {

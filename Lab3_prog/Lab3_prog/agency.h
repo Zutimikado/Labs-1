@@ -25,6 +25,7 @@ public:
 
 	void append(const char*, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
 	agent operator[](int);
+	int num();
 	friend std::ostream& operator<< (std::ostream& out, const agency& a);
 	friend std::ostream& operator<< (std::ostream& out, const agent& a);
 };
