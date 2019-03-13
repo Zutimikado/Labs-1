@@ -24,8 +24,11 @@ public:
 	virtual  ~agency();
 
 	void append(const char*, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
+	agent operator[](int);
 	friend std::ostream& operator<< (std::ostream& out, const agency& a);
+	friend std::ostream& operator<< (std::ostream& out, const agent& a);
 };
 
 std::ostream& operator<< (std::ostream& out, const agency& a);
+std::ostream& operator<< (std::ostream& out, const agent& a);
 std::istream& operator>> (std::istream& in, agency& a);

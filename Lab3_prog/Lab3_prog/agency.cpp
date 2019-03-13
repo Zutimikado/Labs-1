@@ -27,6 +27,12 @@ void agency::append(const char *name, unsigned int const total, unsigned int con
 	count++;
 }
 
+agent agency::operator[](int i)
+{
+	return this->ag[i];
+}
+
+
 std::ostream& operator<< (std::ostream& out, const agency& a)
 {
 	int i = 0;
@@ -35,6 +41,13 @@ std::ostream& operator<< (std::ostream& out, const agency& a)
 	{
 		out << a.ag[i].name << ": " << std::put_time(&a.ag[i].time, "%c") << "; " << a.ag[i].left << "/" << a.ag[i].total << std::endl;
 	}
+
+	return out;
+}
+
+std::ostream& operator<< (std::ostream& out, const agent& a)
+{
+	out << a.name << ": " << std::put_time(&a.time, "%c") << "; " << a.left << "/" << a.total << std::endl;
 
 	return out;
 }
