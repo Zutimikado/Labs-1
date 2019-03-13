@@ -9,6 +9,8 @@ int main()
 	std::cout << k;
 	k.sortname();
 	std::cout << k;
+	k.book(1, 2);
+	std::cout << k[0]; 
 	/*std::cin >> k;
 
 	std::cout << k[0];

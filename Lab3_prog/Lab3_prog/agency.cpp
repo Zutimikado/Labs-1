@@ -150,6 +150,22 @@ void agency::sortname()
 	}
 }
 
+void agency::book(unsigned int ind, unsigned int num)
+{
+	try
+	{
+		if (ag[ind - 1].left < num)
+		{
+			throw std::exception("There aren't enough tickets");
+		}
+		ag[ind - 1].left--;
+		std::cout << "Tickets successfully booked!" << std::endl;
+	}
+	catch (std::exception &err)
+	{
+		std::cout << err.what() << std::endl;
+	}
+}
 
 std::ostream& operator<< (std::ostream& out, const agency& a)
 {

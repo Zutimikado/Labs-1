@@ -25,13 +25,14 @@ public:
 
 public:
 	agency(unsigned int);
-	virtual  ~agency();
+	virtual ~agency();
 
 	void append(const char*, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int, unsigned int);
 	agent operator[](int);
 	int num();
 	void sortdate();
 	void sortname();
+	void book(unsigned int, unsigned int);
 	friend std::ostream& operator<< (std::ostream& out, const agency& a);
 	friend std::ostream& operator<< (std::ostream& out, const agent& a);
 };
