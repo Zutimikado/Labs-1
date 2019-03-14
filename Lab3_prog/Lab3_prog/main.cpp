@@ -2,19 +2,20 @@
 
 int main()
 {
+	setlocale(LC_ALL, "rus");
 	agency k(10);
 
-	k.append("OBLADAET", 180, 2018, 4, 24, 19, 0);
-	k.append("LSP", 1000, 2019, 4, 23, 20, 0);
-	std::cout << k;
+	k.append("OBLADAET", 500, 375, 2019, 4, 21, 19, 0);
+	std::cin >> k;
+	std::cout << std::endl << k[0];
+	k.sortdate();
+	std::cout << std::endl << k;
+	k.readfile();
 	k.sortname();
-	std::cout << k;
+	std::cout << std::endl << k;
 	k.book(1, 2);
-	std::cout << k[0]; 
-	/*std::cin >> k;
-
-	std::cout << k[0];
-	std::cout << k.num() << std::endl;*/
+	std::cout << std::endl << k;
+	std::cout << k.num() << std::endl;
 
 	system("pause");
 	return 0;

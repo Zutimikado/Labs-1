@@ -78,11 +78,11 @@ agency::~agency()
 }
 
 
-void agency::append(const char *name, unsigned int const total, unsigned int const year, unsigned int const month, unsigned int const day, unsigned int const hour, unsigned int const minute)
+void agency::append(const char *name, unsigned int const total, unsigned int left, unsigned int const year, unsigned int const month, unsigned int const day, unsigned int const hour, unsigned int const minute)
 {
-	this->ag[count].total = total;
-	this->ag[count].left = total;
-	strcpy(this->ag[count].name, name);
+	ag[count].total = total;
+	ag[count].left = left;
+	strcpy(ag[count].name, name);
 	ag[count].time.tm_sec = 0;
 	ag[count].time.tm_min = minute;
 	ag[count].time.tm_hour = hour;
@@ -158,12 +158,124 @@ void agency::book(unsigned int ind, unsigned int num)
 		{
 			throw std::exception("There aren't enough tickets");
 		}
-		ag[ind - 1].left--;
+		ag[ind - 1].left -= num;
 		std::cout << "Tickets successfully booked!" << std::endl;
 	}
 	catch (std::exception &err)
 	{
 		std::cout << err.what() << std::endl;
+	}
+}
+
+void agency::readfile()
+{
+	std::ifstream fin("agent.txt");
+	char str[100], str1[100], name[20];
+	int i = 0, j = 0, total = 0, left = 0, year = 0, month = 0, day = 0, hour = 0, minute = 0;
+
+	while (!fin.eof())
+	{
+		fin.getline(str, 100);
+
+		i = 0;
+		j = 0;
+
+		while (str[j] != ';')
+		{
+			str1[i] = str[j];
+			i++;
+			j++;
+		}
+		j++;
+		str1[i] = '\0';
+		strcpy(name, str1);
+		strcpy(str1, "");
+
+		i = 0;
+		while (str[j] != ';')
+		{
+			str1[i] = str[j];
+			i++;
+			j++;
+		}
+		j++;
+		str1[i] = '\0';
+		total = atoi(str1);
+		strcpy(str1, "");
+
+		i = 0;
+		while (str[j] != ';')
+		{
+			str1[i] = str[j];
+			i++;
+			j++;
+		}
+		j++;
+		str1[i] = '\0';
+		left = atoi(str1);
+		strcpy(str1, "");
+
+		i = 0;
+		while (str[j] != '-')
+		{
+			str1[i] = str[j];
+			i++;
+			j++;
+		}
+		j++;
+		str1[i] = '\0';
+		year = atoi(str1);
+		strcpy(str1, "");
+
+		i = 0;
+		while (str[j] != '-')
+		{
+			str1[i] = str[j];
+			i++;
+			j++;
+		}
+		j++;
+		str1[i] = '\0';
+		month = atoi(str1);
+		strcpy(str1, "");
+
+		i = 0;
+		while (str[j] != ' ')
+		{
+			str1[i] = str[j];
+			i++;
+			j++;
+		}
+		j++;
+		str1[i] = '\0';
+		day = atoi(str1);
+		strcpy(str1, "");
+
+		i = 0;
+		while (str[j] != ':')
+		{
+			str1[i] = str[j];
+			i++;
+			j++;
+		}
+		j++;
+		str1[i] = '\0';
+		hour = atoi(str1);
+		strcpy(str1, "");
+
+		i = 0;
+		while (str[j] != '\0')
+		{
+			str1[i] = str[j];
+			i++;
+			j++;
+		}
+		str1[i] = '\0';
+		minute = atoi(str1);
+		strcpy(str1, "");
+
+		strcpy(str, "");
+		this->append(name, total, left, year, month, day, hour, minute);
 	}
 }
 
@@ -189,12 +301,14 @@ std::ostream& operator<< (std::ostream& out, const agent& a)
 std::istream& operator>> (std::istream& in, agency& a)
 {
 	char str[100];
-	unsigned int total = 0, year = 0, month = 0, day = 0, hour = 0, minute = 0;
+	unsigned int total = 0, left = 0, year = 0, month = 0, day = 0, hour = 0, minute = 0;
 	
 	std::cout << "Enter the name: ";
 	in >> str;
 	std::cout << "Enter the number of tickets: ";
 	in >> total;
+	std::cout << "Enter the number of remaining tickets: ";
+	in >> left;
 	std::cout << "Enter the date(year/month/day/hour/minute): ";
 	in >> year;
 	in >> month;
@@ -202,7 +316,7 @@ std::istream& operator>> (std::istream& in, agency& a)
 	in >> hour;
 	in >> minute;
 
-	a.append(str, total, year, month, day, hour, minute);
+	a.append(str, total, left, year, month, day, hour, minute);
 
 	return in;
 }
