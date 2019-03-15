@@ -169,7 +169,7 @@ void agency::book(unsigned int ind, unsigned int num)
 
 void agency::readfile()
 {
-	std::ifstream fin("agent.txt");
+	std::ifstream fin("agent.csv");
 	char str[100], str1[100], name[20];
 	int i = 0, j = 0, total = 0, left = 0, year = 0, month = 0, day = 0, hour = 0, minute = 0;
 

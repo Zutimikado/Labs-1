@@ -9,7 +9,7 @@
 
 struct agent
 {
-	char name[120];
+	char name[30];
 	unsigned int left;
 	unsigned int total;
 	tm time;
