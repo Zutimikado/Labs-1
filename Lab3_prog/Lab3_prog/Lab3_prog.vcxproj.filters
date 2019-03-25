@@ -26,5 +26,8 @@
     <ClInclude Include="agency.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="event.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
