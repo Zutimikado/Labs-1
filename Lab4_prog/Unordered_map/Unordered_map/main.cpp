@@ -10,13 +10,17 @@ int main()
 	my_table.insert(19, "Anna");
 	my_table.insert(17, "Andrei");
 	my_table.insert(23, "Tanya");
-
-	my_table.show();
 	my_table.insert(18, "Masha");
 	my_table.insert(3, "Nastya");
-	std::cout << std::endl;
 	my_table.show();
-
+	std::cout << my_table.count() << std::endl;
+	std::cout << my_table.size() << std::endl;
+	std::cout << my_table.empty() << std::endl;
+	my_table.clear();
+	my_table.show();
+	std::cout << my_table.count() << std::endl;
+	std::cout << my_table.size() << std::endl;
+	std::cout << my_table.empty() << std::endl;
 	
 
 	system("pause");

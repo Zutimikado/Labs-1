@@ -24,6 +24,11 @@ public:
 	void insert(TKey key_val, TValue el_value);
 	void show() const;
 	void Delete(TKey key);
+	TKey operator[] (unsigned position) const;
+	unsigned count() const;
+	unsigned size() const;
+	bool empty() const;
+	void clear();
 };
 
 template <typename TKey, typename TValue>
@@ -153,5 +158,57 @@ void Unordered_map<TKey, TValue>::Delete(TKey key)
 	catch (std::exception& e)
 	{
 		std::cout << e.what() << std::endl;
+	}
+}
+
+template <typename TKey, typename TValue>
+TKey Unordered_map<TKey, TValue>::operator[](unsigned position) const
+{
+	try
+	{
+		if (table_[position] != std::nullopt)
+		{
+			return table_[position]->key;
+		}
+		throw std::exception("No object with this position was found!");
+	}
+	catch (std::exception& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+}
+
+template <typename TKey, typename TValue>
+unsigned Unordered_map<TKey, TValue>::count() const
+{
+	return count_;
+}
+
+template <typename TKey, typename TValue>
+unsigned Unordered_map<TKey, TValue>::size() const
+{
+	return capacity_;
+}
+
+template <typename TKey, typename TValue>
+bool Unordered_map<TKey, TValue>::empty() const
+{
+	for (int i = 0; i < capacity_; i++)
+	{
+		if (table_[i] != std::nullopt)
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+template <typename TKey, typename TValue>
+void Unordered_map<TKey, TValue>::clear()
+{
+	count_ = 0;
+	for (int i = 0; i < capacity_; i++)
+	{
+		table_[i] = std::nullopt;
 	}
 }
