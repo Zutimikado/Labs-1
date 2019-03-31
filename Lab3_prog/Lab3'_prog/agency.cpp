@@ -7,17 +7,17 @@
 
 event agency::operator[](int i) const
 {
-	return this->events[i];
+	return events[i];
 }
 
 int agency::num() const
 {
-	return this->events.size();
+	return events.size();
 }
 
 void agency::sort_by_date()
 {
-	std::sort(events.begin(), events.end(), [](event e1, event e2) -> bool
+	std::sort(events.begin(), events.end(), [](event &e1, event &e2) -> bool
 	{
 		return mktime(&(e1.time)) < mktime(&(e2.time));
 	});

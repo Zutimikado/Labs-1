@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 
-#pragma warning(disable: 4996)
 
 class agency
 {

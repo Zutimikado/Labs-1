@@ -1,117 +1,157 @@
 #pragma once
 #include <iostream>
+#include <optional>
 
-template <typename T1, typename T2>
-struct Node
+template <typename TKey, typename TValue>
+struct node
 {
-	T1 key;
-	T2 value;
-	Node<T1, T2> *next, *prev;
+	TKey key;
+	TValue value;
 };
 
-template <typename T1, typename T2>
+template <typename TKey, typename TValue>
 class Unordered_map {
-private:
-	Node<T1, T2> *head, *tail;
+	std::optional<node<TKey, TValue>> *table_;
+	unsigned capacity_;
+	unsigned count_;
+
 public:
-	Unordered_map<T1, T2>()
-	{
-		this->head = nullptr;
-		this->tail = nullptr;
-	}
-
-	void AddNode(T1 key, T2 value)
-	{
-		Node<T1, T2> *temp = new Node<T1, T2>;
-		temp->next = nullptr;
-		temp->key = key;
-		temp->value = value;
-
-		if (head != nullptr)
-		{
-			temp->prev = tail;
-			tail->next = temp;
-			tail = temp;
-		}
-		else
-		{
-			temp->prev = nullptr;
-			head = tail = temp;
-		}
-	}
-
-	T1 FindKey(T2 value)
-	{
-		Node<T1, T2> *temp = new Node<T1, T2>;
-		temp = head;
-
-		try
-		{
-			while (temp != nullptr)
-			{
-				if (temp->value == value)
-				{
-					return temp->key;
-				}
-				temp = temp->next;
-			}
-
-			throw std::exception("There is no key with this value!");
-		}
-		catch (std::exception &e)
-		{
-			std::cout << e.what() << std::endl;
-		}
-	}
-
-	T2 FindValue(T1 key)
-	{
-		Node<T1, T2> *temp = new Node<T1, T2>;
-		temp = head;
-
-		try
-		{
-			while (temp != nullptr)
-			{
-				if (temp->key == key)
-				{
-					return temp->value;
-				}
-				temp = temp->next;
-			}
-
-			throw std::exception("There is no key with this value!");
-		}
-		catch (std::exception &e)
-		{
-			std::cout << e.what() << std::endl;
-		}
-	}
-
-	void DeleteNode(T1 key)
-	{
-		Node<T1, T2> *temp = new Node<T1, T2>;
-		temp = head;
-
-		while (temp->key != key)
-		{
-			temp = temp->next;
-		}
-
-		temp->prev->next = temp->next;
-		temp->next->prev = temp->prev;
-		delete temp;
-	}
-
-	void Show()
-	{
-		Node<T1, T2> *temp = new Node<T1, T2>;
-		temp = head;
-
-		while (temp != nullptr)
-		{
-			std::cout << temp->key << ": " << temp->value << std::endl;
-			temp = temp->next;
-		}
-	}
+	Unordered_map();
+	Unordered_map(unsigned capasity);
+	~Unordered_map();
+	unsigned hash(int key) const;
+	TValue search(TKey key) const;
+	void insert(TKey key_val, TValue el_value);
+	void show() const;
+	void Delete(TKey key);
 };
+
+template <typename TKey, typename TValue>
+Unordered_map<TKey, TValue>::Unordered_map()
+{
+	count_ = 0;
+	capacity_ = 10;
+	table_ = new std::optional<node<TKey, TValue>> [capacity_];
+}
+
+template <typename TKey, typename TValue>
+Unordered_map<TKey, TValue>::Unordered_map(unsigned const capasity)
+{
+	count_ = 0;
+	capacity_ = capasity;
+	table_ = new std::optional<node<TKey, TValue>> [capacity_];
+}
+
+template <typename TKey, typename TValue>
+Unordered_map<TKey, TValue>::~Unordered_map<TKey, TValue>()
+{
+	count_ = 0;
+	delete[] table_;
+}
+
+template <typename TKey, typename TValue>
+unsigned Unordered_map<TKey, TValue>::hash(int const key) const
+{
+	return key % capacity_;
+}
+
+template <typename TKey, typename TValue>
+void Unordered_map<TKey, TValue>::insert(TKey key_val, TValue el_value) {
+	try
+	{
+		for (int i = 0; i < capacity_; i++)
+		{
+			if (table_[i] != std::nullopt && key_val == table_[i]->key)
+			{
+				throw std::exception("An object with this key already exist!");
+			}
+		}
+		unsigned position = hash((int)key_val);
+		for (int i = position; i < capacity_; i++)
+		{
+			if (table_[i] == std::nullopt)
+			{
+				node<TKey, TValue> a;
+				table_[i] = a;
+				table_[i]->key = key_val;
+				table_[i]->value = el_value;
+				break;
+			}
+		}
+		count_++;
+		if (count_ * 3 >= capacity_)
+		{
+			capacity_ *= 2;
+			std::optional<node<TKey, TValue>> *new_table = new std::optional<node<TKey, TValue>>[capacity_];
+			for (int i = 0; i < capacity_ / 2; i++)
+			{
+				if (table_[i] != std::nullopt)
+				{
+					node<TKey, TValue> a;
+					new_table[i] = a;
+					new_table[i]->key = table_[i]->key;
+					new_table[i]->value = table_[i]->value;
+				}
+			}
+			delete[] table_;
+			table_ = new_table;
+		}
+	}
+	catch (std::exception& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+}
+
+template <typename TKey, typename TValue>
+void Unordered_map<TKey, TValue>::show() const
+{
+	for (int i = 0; i < capacity_; i++)
+	{
+		if (table_[i] != std::nullopt)
+		{
+			std::cout << table_[i]->key << ": " << table_[i]->value << std::endl;
+		}
+	}
+}
+
+template <typename TKey, typename TValue>
+TValue Unordered_map<TKey, TValue>::search(TKey key) const
+{
+	try
+	{
+		for (int i = 0; i < capacity_; i++)
+		{
+			if (table_[i] != std::nullopt && table_[i]->key == key)
+			{
+				return table_[i]->value;
+			}
+		}
+		throw std::exception("No object with this key was found!");
+	}
+	catch (std::exception& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+}
+
+template <typename TKey, typename TValue>
+void Unordered_map<TKey, TValue>::Delete(TKey key)
+{
+	try
+	{
+		for (int i = 0; i < capacity_; i++)
+		{
+			if (table_[i] != std::nullopt && table_[i]->key == key)
+			{
+				table_[i] = std::nullopt;
+				return;
+			}
+		}
+		throw std::exception("No object with this key was found!");
+	}
+	catch (std::exception& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+}
