@@ -1,6 +1,4 @@
 #include "unordered_map.h"
-#include <iostream>
-#include <string>
 
 int main()
 {

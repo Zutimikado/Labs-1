@@ -117,7 +117,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="unordered_map.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="unordered_map.h" />
