@@ -17,7 +17,7 @@ int agency::num() const
 
 void agency::sort_by_date()
 {
-	std::sort(events.begin(), events.end(), [](event &e1, event &e2) -> bool
+	std::sort(events.begin(), events.end(), [](event e1, event e2) -> bool
 	{
 		return mktime(&(e1.time)) < mktime(&(e2.time));
 	});
@@ -32,7 +32,7 @@ void agency::sort_by_name()
 	});
 }
 
-void agency::book(unsigned int ind, unsigned int num)
+void agency::book(unsigned int const ind, unsigned int const num)
 {
 	try
 	{
@@ -58,7 +58,7 @@ std::istream& operator>>(std::istream& in, agency& a)
 
 	std::string subs[4];
 
-	for (int i = 0; i < 3; i++)
+	for (auto i = 0; i < 3; i++)
 	{
 		const auto pos = line.find(';');
 		subs[i] = line.substr(0, pos);

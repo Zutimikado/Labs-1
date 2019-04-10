@@ -8,7 +8,6 @@ struct node
 {
 	TKey key;
 	TValue value;
-public:
 	node<TKey, TValue>() = default;
 	node<TKey, TValue>& operator= (std::optional<node<TKey, TValue>>& a);
 };
@@ -151,7 +150,7 @@ typename Unordered_map<TKey, TValue>::iterator Unordered_map<TKey, TValue>::begi
 		{
 			throw std::exception("Container is empty!");
 		}
-		for (int i = 0; i < capacity_; i++)
+		for (auto i = 0; i < capacity_; i++)
 		{
 			if (table_[i] != std::nullopt)
 			{
@@ -222,23 +221,23 @@ template <typename TKey, typename TValue>
 void Unordered_map<TKey, TValue>::insert(TKey key_val, TValue el_value) {
 	try
 	{
-		for (int i = 0; i < capacity_; i++)
+		for (auto i = 0; i < capacity_; i++)
 		{
 			if (table_[i] != std::nullopt && key_val == table_[i]->key)
 			{
 				throw std::exception("An object with this key already exist!");
 			}
 		}
-		unsigned const position = hash((int)key_val);
+		unsigned const position = hash(static_cast<int>(key_val));
 		if (count_ * 2 >= capacity_)
 		{
 			capacity_ *= 2;
-			std::optional<node<TKey, TValue>> *new_table = new std::optional<node<TKey, TValue>>[capacity_];
-			for (int i = 0; i < capacity_ / 2; i++)
+			auto*new_table = new std::optional<node<TKey, TValue>>[capacity_];
+			for (auto i = 0; i < capacity_ / 2; i++)
 			{
 				if (table_[i] != std::nullopt)
 				{
-					node<TKey, TValue> a;
+					node<TKey, TValue> a{};
 					new_table[i] = a;
 					new_table[i]->key = table_[i]->key;
 					new_table[i]->value = table_[i]->value;
@@ -250,12 +249,12 @@ void Unordered_map<TKey, TValue>::insert(TKey key_val, TValue el_value) {
 		if (position >= capacity_)
 		{
 			capacity_ = position + 1;
-			std::optional<node<TKey, TValue>> *new_table = new std::optional<node<TKey, TValue>>[capacity_];
-			for (int i = 0; i < capacity_ / 2; i++)
+			auto*new_table = new std::optional<node<TKey, TValue>>[capacity_];
+			for (auto i = 0; i < capacity_ / 2; i++)
 			{
 				if (table_[i] != std::nullopt)
 				{
-					node<TKey, TValue> a;
+					node<TKey, TValue> a{};
 					new_table[i] = a;
 					new_table[i]->key = table_[i]->key;
 					new_table[i]->value = table_[i]->value;
@@ -268,7 +267,7 @@ void Unordered_map<TKey, TValue>::insert(TKey key_val, TValue el_value) {
 		{
 			if (table_[i] == std::nullopt)
 			{
-				node<TKey, TValue> a;
+				node<TKey, TValue> a{};
 				table_[i] = a;
 				table_[i]->key = key_val;
 				table_[i]->value = el_value;
@@ -286,7 +285,7 @@ void Unordered_map<TKey, TValue>::insert(TKey key_val, TValue el_value) {
 template <typename TKey, typename TValue>
 void Unordered_map<TKey, TValue>::show() const
 {
-	for (int i = 0; i < capacity_; i++)
+	for (auto i = 0; i < capacity_; i++)
 	{
 		if (table_[i] != std::nullopt)
 		{
@@ -300,7 +299,7 @@ TValue Unordered_map<TKey, TValue>::search(TKey key) const
 {
 	try
 	{
-		for (int i = 0; i < capacity_; i++)
+		for (auto i = 0; i < capacity_; i++)
 		{
 			if (table_[i] != std::nullopt && table_[i]->key == key)
 			{
@@ -320,7 +319,7 @@ void Unordered_map<TKey, TValue>::Delete(TKey key)
 {
 	try
 	{
-		for (int i = 0; i < capacity_; i++)
+		for (auto i = 0; i < capacity_; i++)
 		{
 			if (table_[i] != std::nullopt && table_[i]->key == key)
 			{
@@ -369,7 +368,7 @@ unsigned Unordered_map<TKey, TValue>::size() const
 template <typename TKey, typename TValue>
 bool Unordered_map<TKey, TValue>::empty() const
 {
-	for (int i = 0; i < capacity_; i++)
+	for (auto i = 0; i < capacity_; i++)
 	{
 		if (table_[i] != std::nullopt)
 		{
@@ -383,7 +382,7 @@ template <typename TKey, typename TValue>
 void Unordered_map<TKey, TValue>::clear()
 {
 	count_ = 0;
-	for (int i = 0; i < capacity_; i++)
+	for (auto i = 0; i < capacity_; i++)
 	{
 		table_[i] = std::nullopt;
 	}
@@ -406,7 +405,7 @@ void Unordered_map<TKey, TValue>::test()
 
 	for (auto it = this->begin(); it != this->end(); it++)
 	{
-		node<TKey, TValue> a;
+		node<TKey, TValue> a{};
 		a = *it;
 		std::cout << a.key << ": " << a.value << std::endl;
 	}

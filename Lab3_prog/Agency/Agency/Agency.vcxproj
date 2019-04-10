@@ -20,8 +20,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{7120BB4A-004C-4AB3-B1A1-BEE7E02ADD87}</ProjectGuid>
-    <RootNamespace>Lab3prog</RootNamespace>
+    <ProjectGuid>{DECBA126-F0BD-4B00-A86F-71196A3F5244}</ProjectGuid>
+    <RootNamespace>Agency</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -115,12 +115,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Lab3%27_prog\Lab3%27_prog\agency.h" />
-    <ClInclude Include="..\..\Lab3%27_prog\Lab3%27_prog\event.h" />
+    <ClCompile Include="..\..\..\Lab3_prog%27\Agency\Agency\gui.cpp" />
+    <ClCompile Include="agency.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Lab3%27_prog\Lab3%27_prog\agency.cpp" />
-    <ClCompile Include="..\..\Lab3%27_prog\Lab3%27_prog\main.cpp" />
+    <ClInclude Include="agency.h" />
+    <ClInclude Include="event.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\Lab3_prog%27\Agency\Agency\events.csv" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

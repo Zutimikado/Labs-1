@@ -15,19 +15,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Lab3%27_prog\Lab3%27_prog\event.h">
+    <ClCompile Include="agency.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Lab3_prog%27\Agency\Agency\gui.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="event.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Lab3%27_prog\Lab3%27_prog\agency.h">
+    <ClInclude Include="agency.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Lab3%27_prog\Lab3%27_prog\agency.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Lab3%27_prog\Lab3%27_prog\main.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
+    <None Include="..\..\..\Lab3_prog%27\Agency\Agency\events.csv">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
   </ItemGroup>
 </Project>
