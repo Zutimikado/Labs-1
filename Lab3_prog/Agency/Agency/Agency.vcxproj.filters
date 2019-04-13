@@ -18,7 +18,7 @@
     <ClCompile Include="agency.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Lab3_prog%27\Agency\Agency\gui.cpp">
+    <ClCompile Include="gui.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -31,7 +31,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\Lab3_prog%27\Agency\Agency\events.csv">
+    <None Include="events.csv">
       <Filter>Файлы ресурсов</Filter>
     </None>
   </ItemGroup>

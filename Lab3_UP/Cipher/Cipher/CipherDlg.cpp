@@ -175,13 +175,13 @@ void CCipherDlg::OnBnClickedButtonCipher()
 	std::fstream input(infile);
 	char before[128];
 	input.getline(before, 128);
-	for (int i = 0; i < std::strlen(before); i++)
+	/*for (int i = 0; i < std::strlen(before); i++)
 	{
 		if (isupper(before[i]))
 		{
 			before[i] = tolower(before[i]);
 		}
-	}
+	}*/
 	input.close();
 	auto after = new char[strlen(before)];
 

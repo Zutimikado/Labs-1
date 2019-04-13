@@ -221,14 +221,11 @@ template <typename TKey, typename TValue>
 void Unordered_map<TKey, TValue>::insert(TKey key_val, TValue el_value) {
 	try
 	{
-		for (auto i = 0; i < capacity_; i++)
-		{
-			if (table_[i] != std::nullopt && key_val == table_[i]->key)
-			{
-				throw std::exception("An object with this key already exist!");
-			}
-		}
 		unsigned const position = hash(static_cast<int>(key_val));
+		if (table_[position] != std::nullopt && key_val == table_[position]->key)
+		{
+			throw std::exception("An object with this key already exist!");
+		}
 		if (count_ * 2 >= capacity_)
 		{
 			capacity_ *= 2;
@@ -238,9 +235,9 @@ void Unordered_map<TKey, TValue>::insert(TKey key_val, TValue el_value) {
 				if (table_[i] != std::nullopt)
 				{
 					node<TKey, TValue> a{};
-					new_table[i] = a;
-					new_table[i]->key = table_[i]->key;
-					new_table[i]->value = table_[i]->value;
+					new_table[hash(table_[i]->key)] = a;
+					new_table[hash(table_[i]->key)]->key = table_[i]->key;
+					new_table[hash(table_[i]->key)]->value = table_[i]->value;
 				}
 			}
 			delete[] table_;
@@ -250,14 +247,14 @@ void Unordered_map<TKey, TValue>::insert(TKey key_val, TValue el_value) {
 		{
 			capacity_ = position + 1;
 			auto*new_table = new std::optional<node<TKey, TValue>>[capacity_];
-			for (auto i = 0; i < capacity_ / 2; i++)
+			for (auto i = 0; i < capacity_ - 1; i++)
 			{
 				if (table_[i] != std::nullopt)
 				{
 					node<TKey, TValue> a{};
-					new_table[i] = a;
-					new_table[i]->key = table_[i]->key;
-					new_table[i]->value = table_[i]->value;
+					new_table[hash(table_[i]->key)] = a;
+					new_table[hash(table_[i]->key)]->key = table_[i]->key;
+					new_table[hash(table_[i]->key)]->value = table_[i]->value;
 				}
 			}
 			delete[] table_;
@@ -299,12 +296,10 @@ TValue Unordered_map<TKey, TValue>::search(TKey key) const
 {
 	try
 	{
-		for (auto i = 0; i < capacity_; i++)
+		auto position = hash(key);
+		if (table_[position] != std::nullopt)
 		{
-			if (table_[i] != std::nullopt && table_[i]->key == key)
-			{
-				return table_[i]->value;
-			}
+			return table_[position]->value;
 		}
 		throw std::exception("No object with this key was found!");
 	}
@@ -319,14 +314,12 @@ void Unordered_map<TKey, TValue>::Delete(TKey key)
 {
 	try
 	{
-		for (auto i = 0; i < capacity_; i++)
+		auto position = hash(key);
+		if (table_[position] != std::nullopt)
 		{
-			if (table_[i] != std::nullopt && table_[i]->key == key)
-			{
-				table_[i] = std::nullopt;
-				count_--;
-				return;
-			}
+			table_[position] = std::nullopt;
+			count_--;
+			return;
 		}
 		throw std::exception("No object with this key was found!");
 	}

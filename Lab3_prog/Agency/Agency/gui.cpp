@@ -17,6 +17,8 @@ bool is_date_in_range(tm from, tm to, tm val)
 	return mktime(&from) <= mktime(&val) && mktime(&val) <= mktime(&to);
 }
 
+bool is_sort = false;
+
 int CALLBACK wWinMain(const HINSTANCE hInstance, HINSTANCE, PWSTR lpCmdLine, const int nShowCmd)
 {
 	static agency agency;
@@ -27,7 +29,7 @@ int CALLBACK wWinMain(const HINSTANCE hInstance, HINSTANCE, PWSTR lpCmdLine, con
 	}
 	agency.sort_by_date();
 
-	static HWND SearchControl, OutputControl, FromDateControl, ToDateControl;
+	static HWND SearchControl, OutputControl, FromDateControl, ToDateControl, SortControl;
 	static HFONT myFont_SC, myFont_OC;
 	MSG msg{};
 	WNDCLASSEX wc;
@@ -63,11 +65,17 @@ int CALLBACK wWinMain(const HINSTANCE hInstance, HINSTANCE, PWSTR lpCmdLine, con
 			SendMessage(SearchControl, WM_SETFONT, WPARAM(myFont_SC), 0);
 			OutputControl = CreateWindowExA(NULL, "edit", nullptr,
 				WS_CHILD | WS_VISIBLE | WS_BORDER | WS_EX_CLIENTEDGE | ES_MULTILINE | ES_AUTOVSCROLL | WS_VSCROLL | ES_READONLY,
-				0, 80, 400, 180, hWnd, nullptr, nullptr, nullptr);
+				0, 120, 400, 180, hWnd, nullptr, nullptr, nullptr);
 			SendMessage(OutputControl, WM_SETFONT, WPARAM(myFont_OC), 0);
 			CreateWindowExA(NULL, "button", "Search",
 				WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
 				300, 40, 100, 40, hWnd, reinterpret_cast<HMENU>(1), nullptr, nullptr);
+			SortControl = CreateWindowExA(NULL, "button", "Sort by name",
+				WS_CHILD | WS_VISIBLE | BS_RADIOBUTTON,
+				0, 80, 110, 40, hWnd, reinterpret_cast<HMENU>(2), nullptr, nullptr);
+			CreateWindowExA(NULL, "button", "Show all",
+				WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+				300, 80, 100, 40, hWnd, reinterpret_cast<HMENU>(3), nullptr, nullptr);
 		}
 		return 0;
 
@@ -93,6 +101,14 @@ int CALLBACK wWinMain(const HINSTANCE hInstance, HINSTANCE, PWSTR lpCmdLine, con
 				std::string output_text;
 				char date[20];
 
+				if (is_sort)
+				{
+					agency.sort_by_name();
+				}
+				else
+				{
+					agency.sort_by_date();
+				}
 				for (const auto& e : agency)
 				{
 					if ((text_length == 0 || e.name.find(search_text) != std::string::npos) &&
@@ -101,6 +117,54 @@ int CALLBACK wWinMain(const HINSTANCE hInstance, HINSTANCE, PWSTR lpCmdLine, con
 						strftime(date, 20, "%b %d %Y %H:%M", &(e.time));
 						output_text += e.name + "\r\t" + date + "\r\n";
 					}
+				}
+				SetWindowTextA(OutputControl, output_text.c_str());
+			}
+			if (LOWORD(wParam) == 2)
+			{
+				if (is_sort)
+				{
+					SendMessage(SortControl, BM_SETCHECK, BST_UNCHECKED, 0);
+					is_sort = false;
+				}
+				else
+				{
+					SendMessage(SortControl, BM_SETCHECK, BST_CHECKED, 0);
+					is_sort = true;
+				}
+			}
+			if (LOWORD(wParam) == 3)
+			{
+				tm date_from, date_to;
+				const auto date_from_s = new char[100];
+				GetWindowTextA(FromDateControl, date_from_s, 100);
+				std::stringstream ss1(date_from_s);
+				ss1 >> std::get_time(&(date_from), "%d.%m.%Y");
+				const auto date_to_s = new char[100];
+				GetWindowTextA(ToDateControl, date_to_s, 100);
+				std::stringstream ss2(date_to_s);
+				ss2 >> std::get_time(&(date_to), "%d.%m.%Y");
+				date_from.tm_hour = date_from.tm_min = date_to.tm_hour = date_to.tm_min = 0;
+
+				const auto text_length = GetWindowTextLengthA(SearchControl) + 1;
+				const auto search_text = new char[text_length];
+				GetWindowTextA(SearchControl, search_text, text_length);
+
+				std::string output_text;
+				char date[20];
+
+				if (is_sort)
+				{
+					agency.sort_by_name();
+				}
+				else
+				{
+					agency.sort_by_date();
+				}
+				for (const auto& e : agency)
+				{
+					strftime(date, 20, "%b %d %Y %H:%M", &(e.time));
+					output_text += e.name + "\r\t" + date + "\r\n";
 				}
 				SetWindowTextA(OutputControl, output_text.c_str());
 			}
@@ -126,7 +190,7 @@ int CALLBACK wWinMain(const HINSTANCE hInstance, HINSTANCE, PWSTR lpCmdLine, con
 	const auto hwnd = CreateWindow(wc.lpszClassName,
 		CString(L"Agency"),
 		WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME ^ WS_MAXIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT,
-		415, 300, nullptr, nullptr, wc.hInstance, nullptr);
+		415, 340, nullptr, nullptr, wc.hInstance, nullptr);
 	if (hwnd == INVALID_HANDLE_VALUE)
 	{
 		return EXIT_FAILURE;
