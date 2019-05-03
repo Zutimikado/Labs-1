@@ -2,7 +2,7 @@
 
 int main()
 {
-	Unordered_map<int, const char*> my_table(10);
+	Unordered_map<const char*, const char*> my_table(10);
 
 	my_table.test();
 

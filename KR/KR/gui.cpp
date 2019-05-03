@@ -1,4 +1,4 @@
-﻿#pragma comment(linker,"\"/manifestdependency:type='win32' \
+#pragma comment(linker,"\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
@@ -7,7 +7,7 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #include <atlstr.h>
 #include <string>
 #include <fstream>
-#include "agency.h"
+#include "Station.h"
 #include <sstream>
 #include <iomanip>
 
@@ -21,13 +21,13 @@ bool is_sort = false;
 
 int CALLBACK wWinMain(const HINSTANCE hInstance, HINSTANCE, PWSTR lpCmdLine, const int nShowCmd)
 {
-	static agency agency;
-	std::ifstream file("fligths.csv");
+	static station station;
+	std::ifstream file("flights.csv");
 	while (!file.eof())
 	{
-		file >> agency;
+		file >> station;
 	}
-	agency.sort_by_date();
+	station.sort_by_date();
 
 	static HWND SearchControl, OutputControl, FromDateControl, ToDateControl, SortControl;
 	static HFONT myFont_SC, myFont_OC;
@@ -70,12 +70,9 @@ int CALLBACK wWinMain(const HINSTANCE hInstance, HINSTANCE, PWSTR lpCmdLine, con
 			CreateWindowExA(NULL, "button", "Search",
 				WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
 				300, 40, 100, 40, hWnd, reinterpret_cast<HMENU>(1), nullptr, nullptr);
-			SortControl = CreateWindowExA(NULL, "button", "Sort by name",
-				WS_CHILD | WS_VISIBLE | BS_RADIOBUTTON,
-				0, 80, 110, 40, hWnd, reinterpret_cast<HMENU>(2), nullptr, nullptr);
 			CreateWindowExA(NULL, "button", "Show all",
 				WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-				300, 80, 100, 40, hWnd, reinterpret_cast<HMENU>(3), nullptr, nullptr);
+				300, 80, 100, 40, hWnd, reinterpret_cast<HMENU>(2), nullptr, nullptr);
 		}
 		return 0;
 
@@ -99,41 +96,22 @@ int CALLBACK wWinMain(const HINSTANCE hInstance, HINSTANCE, PWSTR lpCmdLine, con
 				GetWindowTextA(SearchControl, search_text, text_length);
 
 				std::string output_text;
-				char date[20];
+				char dateFrom[20];
+				char dateTo[20];
 
-				if (is_sort)
+				for (const auto& f : station)
 				{
-					agency.sort_by_name();
-				}
-				else
-				{
-					agency.sort_by_date();
-				}
-				for (const auto& e : agency)
-				{
-					if ((text_length == 0 || e.name.find(search_text) != std::string::npos) &&
-						is_date_in_range(date_from, date_to, e.time))
+					if ((text_length == 0 || f.start_city.find(search_text) != std::string::npos) &&
+						is_date_in_range(date_from, date_to, f.start_time))
 					{
-						strftime(date, 20, "%b %d %Y %H:%M", &(e.time));
-						output_text += e.name + "\r\t" + date + "\r\n";
+						strftime(dateFrom, 20, "%b %d %Y %H:%M", &(f.start_time));
+						strftime(dateTo, 20, "%b %d %Y %H:%M", &(f.end_time));
+						output_text += f.start_city + " to " + f.end_city + "; " + dateFrom + " - " +  dateTo + "; " + std::to_string(f.remaining_ticket) + "/" + std::to_string(f.capasity) + "\n";
 					}
 				}
 				SetWindowTextA(OutputControl, output_text.c_str());
 			}
 			if (LOWORD(wParam) == 2)
-			{
-				if (is_sort)
-				{
-					SendMessage(SortControl, BM_SETCHECK, BST_UNCHECKED, 0);
-					is_sort = false;
-				}
-				else
-				{
-					SendMessage(SortControl, BM_SETCHECK, BST_CHECKED, 0);
-					is_sort = true;
-				}
-			}
-			if (LOWORD(wParam) == 3)
 			{
 				tm date_from, date_to;
 				const auto date_from_s = new char[100];
@@ -151,20 +129,14 @@ int CALLBACK wWinMain(const HINSTANCE hInstance, HINSTANCE, PWSTR lpCmdLine, con
 				GetWindowTextA(SearchControl, search_text, text_length);
 
 				std::string output_text;
-				char date[20];
+				char dateFrom[20];
+				char dateTo[20];
 
-				if (is_sort)
+				for (const auto& f : station)
 				{
-					agency.sort_by_name();
-				}
-				else
-				{
-					agency.sort_by_date();
-				}
-				for (const auto& e : agency)
-				{
-					strftime(date, 20, "%b %d %Y %H:%M", &(e.time));
-					output_text += e.name + "\r\t" + date + "\r\n";
+					strftime(dateFrom, 20, "%b %d %Y %H:%M", &(f.start_time));
+					strftime(dateTo, 20, "%b %d %Y %H:%M", &(f.end_time));
+					output_text += f.start_city + " to " + f.end_city + "; " + dateFrom + " - " + dateTo + "; " + std::to_string(f.remaining_ticket) + "/" + std::to_string(f.capasity) + "\n";
 				}
 				SetWindowTextA(OutputControl, output_text.c_str());
 			}
@@ -179,7 +151,7 @@ int CALLBACK wWinMain(const HINSTANCE hInstance, HINSTANCE, PWSTR lpCmdLine, con
 		}
 		return DefWindowProc(hWnd, uMsg, wParam, lParam);
 	};
-	wc.lpszClassName = CString(L"agency");
+	wc.lpszClassName = CString(L"station");
 	wc.lpszMenuName = nullptr;
 	wc.style = CS_VREDRAW | CS_HREDRAW;
 
@@ -188,7 +160,7 @@ int CALLBACK wWinMain(const HINSTANCE hInstance, HINSTANCE, PWSTR lpCmdLine, con
 		return EXIT_FAILURE;
 	}
 	const auto hwnd = CreateWindow(wc.lpszClassName,
-		CString(L"Agency"),
+		CString(L"Station"),
 		WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME ^ WS_MAXIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT,
 		415, 340, nullptr, nullptr, wc.hInstance, nullptr);
 	if (hwnd == INVALID_HANDLE_VALUE)
